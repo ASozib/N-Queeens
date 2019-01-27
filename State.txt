@@ -1,0 +1,95 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Random;
+
+public class State implements Serializable {
+    static int n = 4;
+    private static final long serialVersionUID = 1L;
+    int[] r;
+
+    public static void initializeProblem(int dimension) {
+        n = dimension;
+    }
+
+    public State() {
+        this.r = new int[n];
+    }
+
+    public int objective_function() {
+        int conflicts = 0;
+
+        for(int i = 0; i < n; ++i) {
+            for(int j = i + 1; j < n; ++j) {
+                if(this.r[i] == this.r[j] || Math.abs(this.r[i] - this.r[j]) == Math.abs(i - j)) {
+                    ++conflicts;
+                }
+            }
+        }
+
+        return conflicts;
+    }
+
+    public ArrayList<State> get_successors() {
+        ArrayList successors = new ArrayList();
+
+        for(int i = 0; i < n; ++i) {
+            for(int j = 0; j < n; ++j) {
+                if(j != this.r[i]) {
+                    State state = new State();
+
+                    for(int k = 0; k < n; ++k) {
+                        state.r[k] = this.r[k];
+                    }
+
+                    state.r[i] = j;
+                    successors.add(state);
+                }
+            }
+        }
+
+        return successors;
+    }
+
+    public State get_best_successor() {
+        State bestSuccessor = null;
+        int bestVal = 2147483647;
+        ArrayList successors = this.get_successors();
+        Iterator var4 = successors.iterator();
+
+        while(var4.hasNext()) {
+            State o = (State)var4.next();
+            if(o.objective_function() < bestVal) {
+                bestSuccessor = o;
+                bestVal = o.objective_function();
+            }
+        }
+
+        return bestSuccessor;
+
+    }
+    public boolean goal_test()
+    {
+        return objective_function()==0;
+    }
+    public static State get_random_state() {
+        State state = new State();
+        Random random = new Random();
+
+        for(int i = 0; i < n; ++i) {
+            state.r[i] = random.nextInt(3)+1 ;
+        }
+
+        return state;
+    }
+
+    public String toString() {
+        return Arrays.toString(this.r);
+    }
+}

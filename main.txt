@@ -1,0 +1,61 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by Fernflower decompiler)
+//
+
+public class Main {
+    public Main() {
+    }
+
+    public static void main(String[] args) {
+        State solution = random_restart_hill_climbing(4);
+        System.out.println(solution);
+    }
+
+    public static State greedy_hill_climbing(int n) {
+        int noOfState=0;
+
+        State.initializeProblem(n);
+        State currentState = State.get_random_state();
+
+        int currentObjVal = currentState.objective_function();
+
+        System.out.println(currentObjVal);
+        while (currentObjVal > 0)
+        {
+            //System.out.println("hello");
+            System.out.println(currentState + " :" + currentState.objective_function());
+
+            if (currentState.goal_test()||noOfState>=4) {
+                return  currentState;
+            }
+
+            State bestSuccessor = currentState.get_best_successor();
+
+            if (bestSuccessor.objective_function()>=currentState.objective_function()){
+                noOfState++;
+            }
+
+            if (bestSuccessor.objective_function() < currentState.objective_function()) {
+                currentState = bestSuccessor;
+                noOfState=0;
+            }
+        }
+
+        return currentState;
+    }
+
+
+    public static State random_restart_hill_climbing(int n) {
+        int count=0, lastObj=99999999;
+        System.out.println("Running random restart hill climbing");
+        State endState = null;
+
+        do {
+            System.out.println("Starting new random restart");
+            endState = greedy_hill_climbing(n);
+        } while(endState.objective_function() != 0);
+
+        return endState;
+    }
+}
